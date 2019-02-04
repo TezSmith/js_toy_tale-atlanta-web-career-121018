@@ -4,8 +4,7 @@ let addToy = false
 
 const toyCont = document.querySelector("#toy-collection")
 
-// YOUR CODE HERE
-
+//Adds fetch to initial render
 document.addEventListener('DOMContentLoaded', init)
 
 function init() {
@@ -13,53 +12,18 @@ function init() {
   .then(res => res.json())
   .then(res => {
 
-      res.forEach(t => {
-        let div = document.createElement('div')
-        div.dataset.id = t.id
-        div.classList.add('card')
-        let h2 = document.createElement('h2')
-        h2.innerHTML += `${t.name}`
-        let img = document.createElement('img')
-        img.src = t.image
-        img.classList.add('toy-avatar')
-        let likes = document.createElement('p')
-        let likeBtn = document.createElement('button')
-        likes.innerHTML += `${t.likes}`
-        likeBtn.innerText = "Like <3"
-        div.appendChild(h2)
-        div.appendChild(img)
-        div.appendChild(likes)
-        div.appendChild(likeBtn)
-        toyCont.appendChild(div)
+    let toys = res.map(t => {
+      return (`<div data-id="${t.id}" class="card">
+        <h2>${t.name}</h2>
+        <img src="${t.image}" class="toy-avatar" />
+        <p>${t.likes} </p>
+        <button class="like-btn">Like <3</button>
+      </div>`)
+    }).join(" ")
 
-        likeBtn.addEventListener('click', (e) => {
-          e.preventDefault()
-          let card = e.target.parentElement.dataset.id
-          let text = e.target.previousElementSibling.innerText
-          let num = parseInt(text)
-          let newNum = num+1
+    toyCont.innerHTML += toys
 
-          likes.innerHTML = `${newNum}`
 
-          fetch("http://localhost:3000/toys/" + card, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              likes: newNum
-          })
-        }).then(res => res.json())
-        .then(res => {
-          toyCont.innerHTML += `<div class="card">
-            <h2>${t.name}</h2>
-            <img src="${t.image}" class="toy-avatar" />
-            <p>${t.likes} </p>
-            <button class="like-btn">Like <3</button>
-          </div>`
-        })
-
-      })
-  })
 })
 
 addBtn.addEventListener('click', () => {
@@ -68,7 +32,7 @@ addBtn.addEventListener('click', () => {
   if (addToy) {
     toyForm.style.display = 'block'
     toyForm.addEventListener('submit', (e) => {
-      e.preventDefault()
+      // e.preventDefault()
       let toyName = e.target.name.value
       let toyUrl = e.target.image.value
 
@@ -95,6 +59,32 @@ addBtn.addEventListener('click', () => {
     toyForm.style.display = 'none'
   }
 })
+
+//Adds Likes Counter
+document.body.addEventListener('click', (e) => {
+
+if (event.target.className === 'like-btn') {
+
+      let id = e.target.parentElement.dataset.id
+      let textBox = e.target.previousElementSibling
+      let num = parseInt(e.target.previousElementSibling.innerText)
+
+      textBox.innerHTML = `${++num}`
+
+      fetch("http://localhost:3000/toys/" + id, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          likes: num
+      })
+    }).then(res => res.json())
+ }
+
+})
+
+
+
 }
 
 
