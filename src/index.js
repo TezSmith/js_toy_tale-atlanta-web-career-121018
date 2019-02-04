@@ -46,7 +46,7 @@ addBtn.addEventListener('click', () => {
         likes: 0
       })}).then(res => res.json())
         .then(res => {
-          toyCont.innerHTML += `<div class="card">
+          toyCont.innerHTML += `<div data-id="${t.id}" class="card">
             <h2>${t.name}</h2>
             <img src="${t.image}" class="toy-avatar" />
             <p>${t.likes} </p>
