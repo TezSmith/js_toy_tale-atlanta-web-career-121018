@@ -16,7 +16,7 @@ function init() {
       return (`<div data-id="${t.id}" class="card">
         <h2>${t.name}</h2>
         <img src="${t.image}" class="toy-avatar" />
-        <p>${t.likes} </p>
+        <p>${t.likes} likes</p>
         <button class="like-btn">Like <3</button>
       </div>`)
     }).join(" ")
@@ -49,7 +49,7 @@ addBtn.addEventListener('click', () => {
           toyCont.innerHTML += `<div data-id="${t.id}" class="card">
             <h2>${t.name}</h2>
             <img src="${t.image}" class="toy-avatar" />
-            <p>${t.likes} </p>
+            <p>${t.likes}</p>
             <button class="like-btn">Like <3</button>
           </div>`
         })
@@ -69,7 +69,7 @@ if (event.target.className === 'like-btn') {
       let textBox = e.target.previousElementSibling
       let num = parseInt(e.target.previousElementSibling.innerText)
 
-      textBox.innerHTML = `${++num}`
+      textBox.innerHTML = `${++num} likes`
 
       fetch("http://localhost:3000/toys/" + id, {
         method: 'PATCH',
